@@ -131,7 +131,7 @@ public class PaymentController {
 
 			// Cấu hình URL điều hướng sau khi thanh toán
 			RedirectUrls redirectUrls = new RedirectUrls();
-			redirectUrls.setCancelUrl("http://localhost:3000/payment/cancel/"+orderId);
+			redirectUrls.setCancelUrl("http://localhost:3000/payment/cancel/" + orderId);
 			redirectUrls.setReturnUrl("http://localhost:3000/payment/" + orderId);
 
 			// Tạo đối tượng thanh toán
@@ -209,28 +209,28 @@ public class PaymentController {
 		try {
 			// Lấy thông tin thanh toán từ PayPal
 			com.paypal.api.payments.Payment payment = com.paypal.api.payments.Payment.get(apiContext, paymentId);
-			
+
 			// Kiểm tra trạng thái đơn hàng
 			if ("COMPLETED".equals(order.getPaymentDetails().getStatus())) {
-		        ApiResponse res = new ApiResponse();
-		        res.setMessage("Payment has already been completed.");
-		        res.setStatus(true);
-		        return new ResponseEntity<>(res, HttpStatus.OK);  // Trả về phản hồi rằng thanh toán đã hoàn tất
-		    }
-			
+				ApiResponse res = new ApiResponse();
+				res.setMessage("Payment has already been completed.");
+				res.setStatus(true);
+				return new ResponseEntity<>(res, HttpStatus.OK); // Trả về phản hồi rằng thanh toán đã hoàn tất
+			}
+
 			// Kiểm tra trạng thái của thanh toán trước khi thực hiện thanh toán
-		    if ("approved".equals(payment.getState())) {
-		        ApiResponse res = new ApiResponse();
-		        res.setMessage("Payment has already been completed.");
-		        res.setStatus(true);
-		        return new ResponseEntity<>(res, HttpStatus.OK);  // Trả về phản hồi rằng thanh toán đã hoàn tất
-		    }
-		    
+			if ("approved".equals(payment.getState())) {
+				ApiResponse res = new ApiResponse();
+				res.setMessage("Payment has already been completed.");
+				res.setStatus(true);
+				return new ResponseEntity<>(res, HttpStatus.OK); // Trả về phản hồi rằng thanh toán đã hoàn tất
+			}
+
 			// Thực hiện thanh toán
 			PaymentExecution paymentExecution = new PaymentExecution();
 			paymentExecution.setPayerId(payerId);
 			com.paypal.api.payments.Payment executedPayment = payment.execute(apiContext, paymentExecution);
-			
+
 			if ("approved".equals(executedPayment.getState())) {
 // Cập nhật đơn hàng thành công
 				order.getPaymentDetails().setPaymentId(paymentId);

@@ -97,13 +97,55 @@ public class ProductServiceImplementation implements ProductService{
 
 	@Override
 	public Product updateProduct(Long productId, Product req) throws ProductException {
-		Product product=findProductById(productId);
-		
-		if(req.getQuantity()!= 0) {
-			product.setQuantity(req.getQuantity());
-		}
-		return productRepository.save(product);
+	    // Tìm sản phẩm theo ID
+	    Product product = findProductById(productId);
+	    
+	    if (product == null) {
+	        throw new ProductException("Sản phẩm không tồn tại với ID: " + productId);
+	    }
+
+	    // Cập nhật các thuộc tính của sản phẩm từ yêu cầu
+	    if (req.getTitle() != null) {
+	        product.setTitle(req.getTitle());
+	    }
+	    if (req.getDescription() != null) {
+	        product.setDescription(req.getDescription());
+	    }
+	    if (req.getPrice() > 0) {
+	        product.setPrice(req.getPrice());
+	    }
+	    if (req.getDiscountedPrice() > 0) {
+	        product.setDiscountedPrice(req.getDiscountedPrice());
+	    }
+	    if (req.getDiscountPresent() > 0) {
+	        product.setDiscountPresent(req.getDiscountPresent());
+	    }
+	    if (req.getQuantity() > 0) {
+	        product.setQuantity(req.getQuantity());
+	    }
+	    if (req.getBrand() != null) {
+	        product.setBrand(req.getBrand());
+	    }
+	    if (req.getColor() != null) {
+	        product.setColor(req.getColor());
+	    }
+	    if (req.getSizes() != null && !req.getSizes().isEmpty()) {
+	        product.setSizes(req.getSizes());
+	    }
+	    if (req.getImageUrl() != null) {
+	        product.setImageUrl(req.getImageUrl());
+	    }
+	    if (req.getCategory() != null) {
+	        product.setCategory(req.getCategory());
+	    }
+	    // Giả sử bạn không muốn cập nhật ratings và reviews từ req
+
+	    // Cập nhật số lượng đánh giá nếu cần
+	    // Có thể cần tính toán lại numRatings dựa trên các đánh giá hiện có
+
+	    return productRepository.save(product);
 	}
+
 
 	@Override
 	public Product findProductById(Long id) throws ProductException {

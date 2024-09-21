@@ -52,10 +52,15 @@ public class AdminProductController {
 	}
 	
 	@PutMapping("/{productId}/update")
-	public ResponseEntity<Product>updateProduct(@RequestBody Product req,
-			@PathVariable Long productId) throws ProductException {
-		Product product=productService.updateProduct(productId, req);
-		return new ResponseEntity<Product>(product, HttpStatus.CREATED);
+	public ResponseEntity<Product> updateProduct(
+	        @RequestBody Product req,
+	        @PathVariable Long productId) throws ProductException {
+	    
+	    // Gọi service để cập nhật sản phẩm
+	    Product updatedProduct = productService.updateProduct(productId, req);
+	    
+	    // Trả về sản phẩm đã cập nhật với mã trạng thái 200 OK
+	    return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
 	}
 	
 	@PostMapping("/creates")
